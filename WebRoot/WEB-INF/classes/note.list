@@ -1,0 +1,47 @@
+1.文件上传
+	客户端:浏览器
+		<form method="post"  enctype="multipart/form-data">
+		enctype:application/x-www-form-urlencoded 
+		参数以
+		key=value&key1=value1的形式传送到服务器。
+		
+		enctype:multipart/form-data
+		参数按照分隔符分割:
+			----adfadfaf12223sxvss
+				name="name"
+				adfadf
+			----adfadfaf12223sxvss
+				name="price"
+				12.3
+			----adfadfaf12223sxvss
+				name="author"
+				asdss
+			----adfadfaf12223sxvss
+			...文件
+			以二进制形式发送到服务器。
+			
+		enctype对应请求头:
+			普通表单：Content-Type:application/x-www-form-urlencoded
+			文件上传: Content-Type:multipart/form-data;boundary=----adfadfaf12223sxvss
+	服务器:
+	
+		普通表单：服务器（Tomcat）解析请求中的消息体，获得参数信息，setParameter() setHeader()
+		我们: request.getParameter() getHeader(String)
+		
+		
+		文件上传:服务器接收request信息，但是不解析参数，会setHeader，不会setparameter()
+		也就意味着我们不能request.getParameter(),服务器只是 setInputStream()
+		我们可以使用request.getInputStream()方法获得输入流
+		
+		本来我们应该这样处理:getHeader()没问题 ，不能永getParameter,而是通过getInputStream
+		获得输入流，读取并按照请求头的分隔符，自己手动解析请求中每一部分包括普通参数和文件
+		信息。{我们不愿意做这工作}
+		
+		第三方文件上传插件:负责解析请求，将文件信息和参数信息打包到自己肚子里。
+		
+		实际: 构造第三方组件，交由第三方组件接管请求，我们只负责从第三方插件中
+		获得各种信息（普通表单数据+文件数据）
+
+		
+		
+		
